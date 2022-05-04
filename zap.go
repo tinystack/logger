@@ -54,7 +54,7 @@ func newZapDriver(funcOpts ...funcOption) Logger {
 		zapcore.NewMultiWriteSyncer(syncer...),
 		atomicLevel,
 	)
-	z := zap.New(core, zap.WithCaller(opts.caller), zap.AddCallerSkip(1)).Sugar()
+	z := zap.New(core, zap.WithCaller(opts.caller), zap.AddCallerSkip(2)).Sugar()
 	return &zapLogger{
 		zap: z,
 	}

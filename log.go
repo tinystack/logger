@@ -49,7 +49,6 @@ type funcOption func(*Options)
 func defaultOptions() *Options {
 	return &Options{
 		lvl:     DebugLevel,
-		w:       []io.Writer{os.Stdout},
 		encoder: EncoderJSON,
 		caller:  false,
 	}
