@@ -35,6 +35,11 @@ func newZapDriver(funcOpts ...funcOption) Logger {
 	encoderConfig.EncodeTime = zapcore.RFC3339TimeEncoder
 	encoderConfig.EncodeLevel = zapcore.CapitalLevelEncoder
 	encoderConfig.FunctionKey = "fn"
+	if opts.encoder == EncoderJSON {
+		encoderConfig.MessageKey = ""
+	} else {
+		encoderConfig.MessageKey = "msg"
+	}
 
 	var encoder zapcore.Encoder
 	switch opts.encoder {
@@ -62,14 +67,13 @@ func newZapDriver(funcOpts ...funcOption) Logger {
 
 func (l *zapLogger) z() *zap.SugaredLogger {
 	if l.zap == nil {
-		panic("Zap.zap not initialized")
+		panic("logger: Zap.zap not initialized")
 	}
 	return l.zap
 }
 
 func (l *zapLogger) Debug(args ...interface{}) {
 	l.z().Debug(args...)
-	//l.z().Debugw()
 }
 
 func (l *zapLogger) Info(args ...interface{}) {
@@ -114,4 +118,38 @@ func (l *zapLogger) Fatalf(format string, args ...interface{}) {
 
 func (l *zapLogger) Panicf(format string, args ...interface{}) {
 	l.z().Panicf(format, args...)
+}
+
+func (l *zapLogger) Debugt(msg string, args T) {
+	l.z().Debugw("", l.keysAndValues(msg, args)...)
+}
+
+func (l *zapLogger) Infot(msg string, args T) {
+	l.z().Infow("", l.keysAndValues(msg, args)...)
+}
+
+func (l *zapLogger) Warnt(msg string, args T) {
+	l.z().Warnw("", l.keysAndValues(msg, args)...)
+}
+
+func (l *zapLogger) Errort(msg string, args T) {
+	l.z().Errorw("", l.keysAndValues(msg, args)...)
+}
+
+func (l *zapLogger) Fatalt(msg string, args T) {
+	l.z().Fatalw("", l.keysAndValues(msg, args)...)
+}
+
+func (l *zapLogger) Panict(msg string, args T) {
+	l.z().Panicw("", l.keysAndValues(msg, args)...)
+}
+
+func (l *zapLogger) keysAndValues(msg string, args T) []interface{} {
+	keysAndValues := []interface{}{
+		"msg", msg,
+	}
+	for k, v := range args {
+		keysAndValues = append(keysAndValues, k, v)
+	}
+	return keysAndValues
 }

@@ -7,6 +7,8 @@ import (
 	"github.com/natefinch/lumberjack"
 )
 
+type T map[string]interface{}
+
 type Logger interface {
 	Debug(args ...interface{})
 	Info(args ...interface{})
@@ -21,6 +23,13 @@ type Logger interface {
 	Errorf(format string, args ...interface{})
 	Fatalf(format string, args ...interface{})
 	Panicf(format string, args ...interface{})
+
+	Debugt(msg string, args T)
+	Infot(msg string, args T)
+	Warnt(msg string, args T)
+	Errort(msg string, args T)
+	Fatalt(msg string, args T)
+	Panict(msg string, args T)
 }
 
 type Level int8
@@ -60,9 +69,9 @@ func WithLevel(lvl Level) funcOption {
 	}
 }
 
-func WithWriter(w io.Writer) funcOption {
+func WithWriter(w ...io.Writer) funcOption {
 	return func(o *Options) {
-		o.w = append(o.w, w)
+		o.w = w
 	}
 }
 
@@ -86,26 +95,25 @@ func WithEncoder(encoder string) funcOption {
 var defaultLogger Logger
 
 var (
-	DefaultLogLevel        = DebugLevel
-	DefaultLogFile         = "logs/runtime.log"
-	DefaultDriver   Driver = newZapDriver
+	defaultLogLevel        = DebugLevel
+	defaultLogFile         = "logs/runtime.log"
+	defaultDriver   Driver = newZapDriver
 )
 
 func init() {
 	rtOutput := &lumberjack.Logger{
-		Filename: DefaultLogFile,
+		Filename: defaultLogFile,
 	}
-	defaultLogger = DefaultDriver(
-		WithLevel(DefaultLogLevel),
-		WithWriter(os.Stdout),
-		WithWriter(rtOutput),
+	defaultLogger = defaultDriver(
+		WithLevel(defaultLogLevel),
+		WithWriter(rtOutput, os.Stdout),
 		WithEncoder(EncoderConsole),
 		WithCaller(false),
 	)
 }
 
 func NewLogger(funcOpts ...funcOption) Logger {
-	return DefaultDriver(funcOpts...)
+	return defaultDriver(funcOpts...)
 }
 
 func DefaultLogger() Logger {
@@ -164,6 +172,30 @@ func Panicf(format string, args ...interface{}) {
 	defaultLogger.Panicf(format, args...)
 }
 
+func Debugt(msg string, args T) {
+	defaultLogger.Debugt(msg, args)
+}
+
+func Infot(msg string, args T) {
+	defaultLogger.Infot(msg, args)
+}
+
+func Warnt(msg string, args T) {
+	defaultLogger.Warnt(msg, args)
+}
+
+func Errort(msg string, args T) {
+	defaultLogger.Errort(msg, args)
+}
+
+func Fatalt(msg string, args T) {
+	defaultLogger.Fatalt(msg, args)
+}
+
+func Panict(msg string, args T) {
+	defaultLogger.Panict(msg, args)
+}
+
 type NoneLogger struct{}
 
 func (*NoneLogger) Debug(...interface{})          {}
@@ -178,3 +210,4 @@ func (*NoneLogger) Warnf(string, ...interface{})  {}
 func (*NoneLogger) Errorf(string, ...interface{}) {}
 func (*NoneLogger) Fatalf(string, ...interface{}) {}
 func (*NoneLogger) Panicf(string, ...interface{}) {}
+func (*NoneLogger) Debugt(string, ...T)           {}
