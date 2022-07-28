@@ -3,6 +3,7 @@ package logger
 import (
 	"io"
 	"os"
+	"strings"
 
 	"github.com/natefinch/lumberjack"
 )
@@ -45,6 +46,21 @@ const (
 	PanicLevel
 	FatalLevel
 )
+
+var unmarshalLevelText = map[string]Level{
+	"debug": DebugLevel,
+	"info":  InfoLevel,
+	"warn":  WarnLevel,
+	"error": ErrorLevel,
+	"panic": PanicLevel,
+	"fatal": FatalLevel,
+}
+
+func ParseLevel(text string) Level {
+	text = strings.ToLower(text)
+	lvl, _ := unmarshalLevelText[text]
+	return lvl
+}
 
 type Options struct {
 	lvl     Level
