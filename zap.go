@@ -35,11 +35,7 @@ func newZapDriver(funcOpts ...funcOption) Logger {
 	encoderConfig.EncodeTime = zapcore.RFC3339TimeEncoder
 	encoderConfig.EncodeLevel = zapcore.CapitalLevelEncoder
 	encoderConfig.FunctionKey = "fn"
-	if opts.encoder == EncoderJSON {
-		encoderConfig.MessageKey = ""
-	} else {
-		encoderConfig.MessageKey = "msg"
-	}
+	encoderConfig.MessageKey = "msg"
 
 	var encoder zapcore.Encoder
 	switch opts.encoder {
@@ -121,33 +117,31 @@ func (l *zapLogger) Panicf(format string, args ...interface{}) {
 }
 
 func (l *zapLogger) Debugt(msg string, args T) {
-	l.z().Debugw("", l.keysAndValues(msg, args)...)
+	l.z().Debugw("", l.keysAndValues(args)...)
 }
 
 func (l *zapLogger) Infot(msg string, args T) {
-	l.z().Infow("", l.keysAndValues(msg, args)...)
+	l.z().Infow(msg, l.keysAndValues(args)...)
 }
 
 func (l *zapLogger) Warnt(msg string, args T) {
-	l.z().Warnw("", l.keysAndValues(msg, args)...)
+	l.z().Warnw("", l.keysAndValues(args)...)
 }
 
 func (l *zapLogger) Errort(msg string, args T) {
-	l.z().Errorw("", l.keysAndValues(msg, args)...)
+	l.z().Errorw("", l.keysAndValues(args)...)
 }
 
 func (l *zapLogger) Fatalt(msg string, args T) {
-	l.z().Fatalw("", l.keysAndValues(msg, args)...)
+	l.z().Fatalw("", l.keysAndValues(args)...)
 }
 
 func (l *zapLogger) Panict(msg string, args T) {
-	l.z().Panicw("", l.keysAndValues(msg, args)...)
+	l.z().Panicw("", l.keysAndValues(args)...)
 }
 
-func (l *zapLogger) keysAndValues(msg string, args T) []interface{} {
-	keysAndValues := []interface{}{
-		"msg", msg,
-	}
+func (l *zapLogger) keysAndValues(args T) []interface{} {
+	var keysAndValues []interface{}
 	for k, v := range args {
 		keysAndValues = append(keysAndValues, k, v)
 	}
