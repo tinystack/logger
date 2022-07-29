@@ -117,7 +117,7 @@ func (l *zapLogger) Panicf(format string, args ...interface{}) {
 }
 
 func (l *zapLogger) Debugt(msg string, args T) {
-	l.z().Debugw("", l.keysAndValues(args)...)
+	l.z().Debugw(msg, l.keysAndValues(args)...)
 }
 
 func (l *zapLogger) Infot(msg string, args T) {
@@ -125,19 +125,19 @@ func (l *zapLogger) Infot(msg string, args T) {
 }
 
 func (l *zapLogger) Warnt(msg string, args T) {
-	l.z().Warnw("", l.keysAndValues(args)...)
+	l.z().Warnw(msg, l.keysAndValues(args)...)
 }
 
 func (l *zapLogger) Errort(msg string, args T) {
-	l.z().Errorw("", l.keysAndValues(args)...)
+	l.z().Errorw(msg, l.keysAndValues(args)...)
 }
 
 func (l *zapLogger) Fatalt(msg string, args T) {
-	l.z().Fatalw("", l.keysAndValues(args)...)
+	l.z().Fatalw(msg, l.keysAndValues(args)...)
 }
 
 func (l *zapLogger) Panict(msg string, args T) {
-	l.z().Panicw("", l.keysAndValues(args)...)
+	l.z().Panicw(msg, l.keysAndValues(args)...)
 }
 
 func (l *zapLogger) keysAndValues(args T) []interface{} {
