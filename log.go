@@ -214,16 +214,21 @@ func Panict(msg string, args T) {
 
 type NoneLogger struct{}
 
-func (*NoneLogger) Debug(...interface{})          {}
-func (*NoneLogger) Info(...interface{})           {}
-func (*NoneLogger) Warn(...interface{})           {}
-func (*NoneLogger) Error(...interface{})          {}
-func (*NoneLogger) Fatal(...interface{})          {}
-func (*NoneLogger) Panic(...interface{})          {}
-func (*NoneLogger) Debugf(string, ...interface{}) {}
-func (*NoneLogger) Infof(string, ...interface{})  {}
-func (*NoneLogger) Warnf(string, ...interface{})  {}
-func (*NoneLogger) Errorf(string, ...interface{}) {}
-func (*NoneLogger) Fatalf(string, ...interface{}) {}
-func (*NoneLogger) Panicf(string, ...interface{}) {}
-func (*NoneLogger) Debugt(string, ...T)           {}
+func (*NoneLogger) Debug(args ...interface{})                 {}
+func (*NoneLogger) Info(args ...interface{})                  {}
+func (*NoneLogger) Warn(args ...interface{})                  {}
+func (*NoneLogger) Error(args ...interface{})                 {}
+func (*NoneLogger) Fatal(args ...interface{})                 {}
+func (*NoneLogger) Panic(args ...interface{})                 {}
+func (*NoneLogger) Debugf(format string, args ...interface{}) {}
+func (*NoneLogger) Infof(format string, args ...interface{})  {}
+func (*NoneLogger) Warnf(format string, args ...interface{})  {}
+func (*NoneLogger) Errorf(format string, args ...interface{}) {}
+func (*NoneLogger) Fatalf(format string, args ...interface{}) {}
+func (*NoneLogger) Panicf(format string, args ...interface{}) {}
+func (*NoneLogger) Debugt(msg string, args T)                 {}
+func (*NoneLogger) Infot(msg string, args T)                  {}
+func (*NoneLogger) Warnt(msg string, args T)                  {}
+func (*NoneLogger) Errort(msg string, args T)                 {}
+func (*NoneLogger) Fatalt(msg string, args T)                 {}
+func (*NoneLogger) Panict(msg string, args T)                 {}
